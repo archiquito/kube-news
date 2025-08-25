@@ -52,18 +52,41 @@ O projeto Kube-News é uma aplicação web simples desenvolvida em Node.js, proj
 - Docker (opcional, para containerização)
 - Kubernetes (opcional, para orquestração)
 
+### Docker
+
+Para executar a aplicação usando Docker Compose:
+
+1. Entre na pasta src:
+
+   ```bash
+   cd src
+   ```
+
+2. Execute o comando:
+   ```bash
+   docker compose up -d
+   ```
+
+A aplicação estará disponível em http://localhost:8080 e o banco de dados PostgreSQL será iniciado automaticamente com as configurações definidas no arquivo compose.yml.
+
+Para parar a aplicação:
+
+```bash
+docker compose down
+```
+
 ### Variáveis de Ambiente
 
 Para configurar a aplicação, defina as seguintes variáveis de ambiente:
 
-| Variável | Descrição | Valor Padrão |
-|----------|-----------|--------------|
-| DB_DATABASE | Nome do banco de dados | kubedevnews |
-| DB_USERNAME | Usuário do banco de dados | kubedevnews |
-| DB_PASSWORD | Senha do usuário | Pg#123 |
-| DB_HOST | Endereço do banco de dados | localhost |
-| DB_PORT | Porta do banco de dados | 5432 |
-| DB_SSL_REQUIRE | Habilitar SSL para conexão | false |
+| Variável       | Descrição                  | Valor Padrão |
+| -------------- | -------------------------- | ------------ |
+| DB_DATABASE    | Nome do banco de dados     | kubedevnews  |
+| DB_USERNAME    | Usuário do banco de dados  | kubedevnews  |
+| DB_PASSWORD    | Senha do usuário           | Pg#123       |
+| DB_HOST        | Endereço do banco de dados | localhost    |
+| DB_PORT        | Porta do banco de dados    | 5432         |
+| DB_SSL_REQUIRE | Habilitar SSL para conexão | false        |
 
 ## 🚀 Instalação e Execução
 
@@ -98,15 +121,18 @@ Content-Type: application/json
 A aplicação disponibiliza endpoints para monitoramento e também recursos para simular cenários de falha, muito úteis para testar a resiliência em ambientes Kubernetes:
 
 ### Endpoints de Monitoramento
+
 - `/health` - Verifica o estado atual da aplicação (retorna status da aplicação e hostname da máquina)
 - `/ready` - Verifica se a aplicação está pronta para receber tráfego
 - `/metrics` - Métricas do Prometheus (geradas pelo express-prom-bundle)
 
 ### Simulação de Falhas (Chaos Engineering)
+
 - `/unhealth` - (PUT) Altera o estado da aplicação para não saudável. Todas as requisições subsequentes receberão status code 500.
 - `/unreadyfor/:seconds` - (PUT) Simula indisponibilidade temporária por um número específico de segundos. Durante este período, o endpoint `/ready` retornará status code 500.
 
 Estes recursos de simulação de falhas são extremamente úteis para testar:
+
 - Comportamento de probes de liveness e readiness no Kubernetes
 - Políticas de retry e circuit breaker
 - Mecanismos de failover
@@ -116,11 +142,9 @@ Estes recursos de simulação de falhas são extremamente úteis para testar:
 
 O projeto utiliza um único modelo `Post` com os seguintes campos:
 
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| title | String | Título da notícia (limite: 30 caracteres) |
-| summary | String | Resumo da notícia (limite: 50 caracteres) |
-| content | String | Conteúdo completo (limite: 2000 caracteres) |
-| publishDate | Date | Data de publicação |
-
-
+| Campo       | Tipo   | Descrição                                   |
+| ----------- | ------ | ------------------------------------------- |
+| title       | String | Título da notícia (limite: 30 caracteres)   |
+| summary     | String | Resumo da notícia (limite: 50 caracteres)   |
+| content     | String | Conteúdo completo (limite: 2000 caracteres) |
+| publishDate | Date   | Data de publicação                          |
