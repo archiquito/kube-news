@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kube-news-app
+    ports:
+      - 8080:8080
+    environment:
+      DB_DATABASE: kubenews
+      DB_USERNAME: kubenews
+      DB_PASSWORD: senha
+      DB_HOST: kube_news_db
+    volumes:
+      - .:/app
+    networks:
+      - kube_news_net
+    depends_on:
+      - db
+
+  db:
+    image: bitnami/postgresql:latest
+    container_name: kube_news_db
+    environment:
+      POSTGRES_DB: kubenews
+      POSTGRES_USER: kubenews
+      POSTGRES_PASSWORD: senha
+    ports:
+      - 5432:5432
+    volumes:
+      - kube_news_vol:/bitnami/postgresql
+    networks:
+      - kube_news_net
+
+volumes:
+  kube_news_vol:
+    name: kube_news_vol
+    # external: true (volume se for criado externamente)
+networks:
+  kube_news_net:
+    name: kube_news_net
+    driver: bridge
